@@ -8,15 +8,15 @@ if [[ $UID != 0 ]]; then
 fi
 #####################################################################
 #####################################################################
-rpm --import https://packages.microsoft.com/keys/microsoft.asc 
-wait $! 
-cat <<EOF | tee /etc/yum.repos.d/vscode.repo 
-[code]
-name=Visual Studio Code
-baseurl=https://packages.microsoft.com/yumrepos/vscode
-enabled=1
-gpgcheck=1
-gpgkey=https://packages.microsoft.com/keys/microsoft.asc
-EOF 
-wait $!
-yum install -y code
+# Install & Setup Remote Desktop Connection
+#####################################################################
+# Remote Desktop Ubuntu
+apt-get install -y xrdp && \
+systemctl status xrdp && \
+adduser xrdp ssl-cert && \
+systemctl restart xrdp && \
+ufw allow 3389
+#
+if [ $? == 0 ]; then 
+    printf "\nSomething went wrong installing Remote Desktop...\n"
+fi
