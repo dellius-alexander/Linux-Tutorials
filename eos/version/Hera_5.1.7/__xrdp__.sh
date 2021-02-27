@@ -71,7 +71,7 @@ chmod a+x /etc/xrdp/start${DESKTOP}.sh
 fi
 
 # use the script to setup the ubuntu session
-sed -i_orig -e 's/startwm/start"${DESKTOP}"/g' /etc/xrdp/sesman.ini
+sed -i_orig -e 's/startwm/startpantheon/g' /etc/xrdp/sesman.ini
 
 # rename the redirected drives to 'shared-drives'
 sed -i -e 's/FuseMountName=thinclient_drives/FuseMountName=shared-drives/g' /etc/xrdp/sesman.ini
