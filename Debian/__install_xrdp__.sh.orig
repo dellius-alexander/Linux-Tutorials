@@ -1,6 +1,5 @@
+#!/bin/bash
 
-#!/usr/bin/env bash
-#https://github.com/microsoft/linux-vm-tools/blob/master/ubuntu/18.04/install.sh
 #
 # This script is for Ubuntu 18.04 Bionic Beaver to download and install XRDP+XORGXRDP via
 # source.
@@ -13,10 +12,6 @@
 #
 HWE=""
 #HWE="-hwe-18.04"
-# Desktop Name:
-# Check the name of the ${DESKTOP_SESSION} environment variable...
-DESKTOP="${DESKTOP_SESSION}"
-echo "${DESKTOP}"
 
 ###############################################################################
 # Update our machine to the latest code if we need to.
@@ -60,18 +55,18 @@ sed -i_orig -e 's/crypt_level=high/crypt_level=none/g' /etc/xrdp/xrdp.ini
 sed -i_orig -e 's/bitmap_compression=true/bitmap_compression=false/g' /etc/xrdp/xrdp.ini
 
 # Add script to setup the ubuntu session properly
-if [ ! -e /etc/xrdp/start${DESKTOP}.sh ]; then
-cat >> /etc/xrdp/start${DESKTOP}.sh << EOF
+if [ ! -e /etc/xrdp/startubuntu.sh ]; then
+cat >> /etc/xrdp/startubuntu.sh << EOF
 #!/bin/sh
-export GNOME_SHELL_SESSION_MODE=${DESKTOP}
-export XDG_CURRENT_DESKTOP=${DESKTOP}:GNOME
+export GNOME_SHELL_SESSION_MODE=ubuntu
+export XDG_CURRENT_DESKTOP=ubuntu:GNOME
 exec /etc/xrdp/startwm.sh
 EOF
-chmod a+x /etc/xrdp/start${DESKTOP}.sh
+chmod a+x /etc/xrdp/startubuntu.sh
 fi
 
 # use the script to setup the ubuntu session
-sed -i_orig -e 's/startwm/startpantheon/g' /etc/xrdp/sesman.ini
+sed -i_orig -e 's/startwm/startubuntu/g' /etc/xrdp/sesman.ini
 
 # rename the redirected drives to 'shared-drives'
 sed -i -e 's/FuseMountName=thinclient_drives/FuseMountName=shared-drives/g' /etc/xrdp/sesman.ini

@@ -16,13 +16,18 @@ fi
 # Get & validate current user
 #
 printf "\n\n"
-while [ $(read -p 'Enter current username: ' U && cat /etc/passwd | grep -c "$U") -eq 0 ]; do
-    if [ $(echo ${U} | grep -ic "exit") -eq 1 ]; then
+echo -n "Enter current user: "
+read usr
+while [ $(cat /etc/passwd | grep -c "${usr}") -eq 0 ]; do
+    if [ $(echo ${usr} | grep -ic "exit") -eq 1 ]; then
     exit 0
     fi
-    printf "\n${RED}Sorry I was unable to locate user account: [ $U ].\n \
+    printf "\n${RED}Sorry I was unable to locate user account: [ ${usr} ].\n \
     Please re-enter username or type \"exit\" ${NC}\n\n"
+    echo "Enter current user: "
+    read usr
 done
+printf "\n${usr}\n"
 ###############################################################################
 # Update the apt package index and install packages to allow apt to 
 # use a repository over HTTPS:
@@ -63,24 +68,51 @@ wait $!
 [[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 ##########################################################################
 # Install Docker
+# ***** I had issues installing docker the conventional method via apt
+#       so i opted to install from a package *****
 #
-apt-get install -y apt-transport-https ca-certificates gnupg-agent && \
+apt-get install -y apt-transport-https ca-certificates gnupg-agent
 #
-# Add Docker’s official GPG key:
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-apt-key fingerprint 0EBFCD88 && \
-add-apt-repository \
-"deb [arch=arm64] https://download.docker.com/linux/ubuntu \
-$(lsb_release -cs) \
-stable" && \
-apt-get update && \
-apt-get install docker-ce docker-ce-cli containerd.io && \
-docker run hello-world && \
-# Add docker user
-usermod -aG docker ${U} && \
-newgrp docker
+if [[ $(command -v docker | grep -c "docker") -eq 0 ]]; then
+#
+cd /tmp
+#
+curl -L https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce-cli_20.10.4~3-0~ubuntu-bionic_amd64.deb \
+-o docker-ce-cli_20.10.4~3-0~ubuntu-bionic_amd64.deb && \
+dpkg -i docker-ce-cli_20.10.4~3-0~ubuntu-bionic_amd64.deb
 wait $!
-[[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
+rm docker-ce-cli_20.10.4~3-0~ubuntu-bionic_amd64.deb
+#
+curl -L https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/containerd.io_1.4.3-1_amd64.deb \
+-o containerd.io_1.4.3-1_amd64.deb && \
+dpkg -i containerd.io_1.4.3-1_amd64.deb
+wait $!
+rm containerd.io_1.4.3-1_amd64.deb
+#
+curl -L https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce_20.10.4~3-0~ubuntu-bionic_amd64.deb \
+-o docker-ce_20.10.4~3-0~ubuntu-bionic_amd64.deb && \
+dpkg -i docker-ce_20.10.4~3-0~ubuntu-bionic_amd64.deb 
+wait $!
+rm docker-ce_20.10.4~3-0~ubuntu-bionic_amd64.deb 
+#
+curl -L https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce-rootless-extras_20.10.4~3-0~ubuntu-bionic_amd64.deb \
+-o docker-ce-rootless-extras_20.10.4~3-0~ubuntu-bionic_amd64.deb && \
+dpkg -i docker-ce-rootless-extras_20.10.4~3-0~ubuntu-bionic_amd64.deb
+wait $!
+rm docker-ce-rootless-extras_20.10.4~3-0~ubuntu-bionic_amd64.deb
+#
+fi
+# Test docker is working
+docker run hello-world
+wait $!
+# Add docker user
+printf "\n\n${RED}Note:${NC}\n"
+printf "\nRun the below to add user to docker group:\n"
+printf "\n\t${RED}sudo usermod -aG docker ${usr}${NC}\n"
+printf "\n\t${RED}newgrp docker ${usr}${NC}\n\n"
+read -n 1 -s -r -p "Press any key to continue"
+wait $!
+sleep 10
 #
 ##########################################################################
 # Install OBS:
@@ -112,7 +144,7 @@ wait $!
 # Visual Studio Code
 #
 # See: https://code.visualstudio.com/docs/setup/linux
-curl -L https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg && \
+wget -qO https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg && \
 install -o root -g root -m 644 packages.microsoft.gpg /usr/share/keyrings/ && \
 sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] \
 https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list' && \
@@ -183,17 +215,18 @@ wait $!
 # apt-get update
 # apt-get install insomnia
 ##########################################################################
-# # Install nodeJS 15.x
-# #
-# # see: https://github.com/nodesource/distributions/blob/master/README.md
-# # Using Ubuntu
-# curl -fsSL https://deb.nodesource.com/setup_15.x | -E bash - && \
-# apt-get install -y nodejs 
-# [[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
+# Install nodeJS 15.x
+#
+# see: https://github.com/nodesource/distributions/blob/master/README.md
+# Using Ubuntu
+curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash - && \
+apt-get install -y nodejs 
+[[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 ##########################################################################
 # Install Remote desktop client
 #
 apt-get install -y remmina
+wait $!
 [[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 ##########################################################################
 # [Optional] 
@@ -220,7 +253,7 @@ gsettings set io.elementary.files.preferences single-click false
 # Accelerate startup
 #
 mv /etc/xdg/autostart/at-spi-dbus-bus.desktop /etc/xdg/autostart/at-spi-dbus-bus.disabled
-
+#
 # Update graphics drivers
 #
 ubuntu-drivers devices
