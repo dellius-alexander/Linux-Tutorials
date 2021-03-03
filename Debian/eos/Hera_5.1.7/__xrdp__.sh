@@ -11,8 +11,8 @@
 ###############################################################################
 # Use HWE kernel packages
 #
-HWE=""
-#HWE="-hwe-18.04"
+#HWE=""
+HWE="-hwe-18.04"
 # Desktop Name:
 # Check the name of the ${DESKTOP_SESSION} environment variable...
 DESKTOP="${DESKTOP_SESSION}"

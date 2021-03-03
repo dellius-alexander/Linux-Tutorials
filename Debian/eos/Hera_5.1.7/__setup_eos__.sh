@@ -49,23 +49,23 @@ apt install -y apt-xapian-index synaptic gdebi dconf-editor && \
 apt install -y transmission-gtk && \
 apt install -y gparted filezilla && \
 #apt install -y sqlite3 && \
-apt install -y exfat-fuse exfat-utils && \
+apt install -y exfat-fuse exfat-utils net-tools && \
 apt install -y git gitk git-gui git-flow
 wait $!
-[[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
+[ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 # Set python 3.6.x as default.
 update-alternatives --install /usr/bin/python python /usr/bin/python2.7 18
 update-alternatives --install /usr/bin/python python /usr/bin/python3.6 9
 update-alternatives --config python
 wait $!
-[[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
+[ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 # and choose 3.6.9
 
 apt install -y python3-virtualenv python3-dev  && \
 apt install -y build-essential && \
 apt install -y python3-pip
 wait $!
-[[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
+[ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 ##########################################################################
 # Install Docker
 # ***** I had issues installing docker the conventional method via apt
@@ -128,7 +128,7 @@ add-apt-repository ppa:obsproject/obs-studio && \
 apt-get update && \
 apt-get install obs-studio
 wait $!
-[[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
+[ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 ##########################################################################
 # sublime text 3
 #
@@ -139,7 +139,7 @@ echo "deb https://download.sublimetext.com/ apt/stable/" | tee /etc/apt/sources.
 apt-get update && \
 apt-get install -y sublime-text
 wait $!
-[[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
+[ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 ##########################################################################
 # Visual Studio Code
 #
@@ -152,7 +152,7 @@ apt-get install -y apt-transport-https libxss1 && \
 apt-get update && \
 apt-get install code # or code-insiders
 wait $!
-[[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
+[ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 #
 #======================== Alternative Method =============================
 # # Install VSCode
@@ -175,7 +175,7 @@ echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
 apt-get update && \
 apt-get -y install google-chrome-stable
 wait $!
-[[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
+[ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 ##########################################################################
 # # Install Opera Browser
 # #
@@ -221,13 +221,13 @@ wait $!
 # Using Ubuntu
 curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash - && \
 apt-get install -y nodejs 
-[[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
+[ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 ##########################################################################
 # Install Remote desktop client
 #
 apt-get install -y remmina
 wait $!
-[[ $? -ne 0 ]] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
+[ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 ##########################################################################
 # [Optional] 
 # Google Drive client insync:
