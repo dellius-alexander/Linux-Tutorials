@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 ##################################################################### This installation assumes you have already downloaded the jdk
+# Java is setup in user library
 ####################################################################
 set -e
 # create a directory for the jdk in /etc/${services}
@@ -22,3 +23,12 @@ printf "\n\n"
 java -version
 printf "\n\n"
 javac -version
+# Setting the JAVA_HOME Environment Variable
+cat >>/etc/environment<<EOF
+JAVA_HOME="/usr/lib/jvm/jdk-11.0.10"
+EOF
+# reload the environment file
+source /etc/environment
+# Verify that the environment variable is set:
+echo $JAVA_HOME
+printf "\nInstallation Complete......\n"
