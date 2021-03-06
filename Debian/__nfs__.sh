@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# ex62.sh: Global and local variables inside a function.
+##########################################################################
+# Documentation: https://help.ubuntu.com/community/SettingUpNFSHowTo
 ##########################################################################
 RED='\033[0;31m' # Red
 NC='\033[0m' # No Color CAP
@@ -23,11 +26,12 @@ fi
 #
 ##########################################################################
 ##########################################################################
+#
 __nfs__() {
 _input=($(echo ${@}))
 declare -p _input &>/dev/null
 if [[ $UID == 0 ]] &&  [[ ${#_input[@]} == 3 ]] && [[ ${_input[0]} =~ $_url_pattern ]] && [[ ${_input[1]} =~ $_file_pattern ]] && [[ ${_input[2]} =~ $_file_pattern ]]; then
-yum install yum -y  nfs-utils nfs-utils-lib firewalld
+apt-get install -y  ufw nfs-common
 wait $!
 printf "\n\n"
 [ ! -d "/mnt/nfs" ] && mkdir -p ${_input[2]}   # /mnt/local/nfs

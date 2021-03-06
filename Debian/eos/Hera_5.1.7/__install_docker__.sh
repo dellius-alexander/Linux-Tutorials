@@ -60,7 +60,9 @@ curl -L https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/
 dpkg -i docker-ce-rootless-extras_20.10.4~3-0~ubuntu-bionic_amd64.deb
 wait $!
 rm docker-ce-rootless-extras_20.10.4~3-0~ubuntu-bionic_amd64.deb
-#
+# Setup bash completion for docker
+curl -L https://raw.githubusercontent.com/docker/compose/1.28.5/contrib/completion/bash/docker-compose \
+-o /etc/bash_completion.d/docker-compose
 fi
 # Test docker is working
 docker run hello-world
