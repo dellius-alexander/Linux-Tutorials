@@ -36,7 +36,7 @@ wait $!
 printf "\n\n"
 [ ! -d "/mnt/nfs" ] && mkdir -p ${_input[2]}   # /mnt/local/nfs
 if [[ $(mount | grep -i 'nfs' | grep -i ${_input[0]} | grep -i ${_input[1]} | grep -ic ${_input[2]}) == 0 ]]; then
-    mount -t nfs -o proto=tcp,port=2049 ${_input[0]}:${_input[1]} ${_input[2]}
+    mount -t nfs -o nfsvers=4 ${_input[0]}:${_input[1]} ${_input[2]}
     wait $!
 fi
 printf "\n\n"
@@ -46,7 +46,8 @@ wait $!
 printf "\n\n"
 if [[ $(cat /etc/fstab | grep -i ${_input[0]} | grep -i ${_input[1]} | grep -c ${_input[2]}) -eq 0 ]]; then
 cat >>/etc/fstab<<EOF 
-${_input[0]}:${_input[1]} ${_input[2]}  nfs     nosuid,rw,sync,hard,intr    0   0
+# Mount point for NFS Share
+${_input[0]}:${_input[1]} ${_input[2]}  nfs4     _netdev,auto,nosuid,rw,sync,hard,intr    0   0
 EOF
 printf "\n$(cat /etc/fstab | grep -i 'nfs')\n\n"
 printf "\nMounted ${_input[1]} successfully to ${_input[3]} from host ${_input[0]}...\n\n\n"
