@@ -274,8 +274,7 @@ rm -rf /tmp/expvpn
 printf "\n\n${RED}Goto https://www.expressvpn.com/setup#linux and login to retrieve your activation code to complete installation.\n\nWant a graphical interface?\n
 Control ExpressVPN with our browser extension, which protects your whole device.\n\n
 For Chrome, run “expressvpn install-chrome-extension”.\n
-For Firefox, run “expressvpn install-firefox-extension”.\n
-${NC}\n\n"
+For Firefox, run “expressvpn install-firefox-extension”.${NC}\n\n"
 expressvpn activate
 wait $!
 ##########################################################################
