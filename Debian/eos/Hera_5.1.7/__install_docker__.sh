@@ -36,36 +36,44 @@ apt-get install -y apt-transport-https ca-certificates gnupg-agent
 if [[ $(command -v docker | grep -c "docker") -eq 0 ]]; then
 #
 cd /tmp
-#
+# Install docker-ce-cli
 curl -L https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce-cli_20.10.4~3-0~ubuntu-bionic_amd64.deb \
 -o docker-ce-cli_20.10.4~3-0~ubuntu-bionic_amd64.deb && \
 dpkg -i docker-ce-cli_20.10.4~3-0~ubuntu-bionic_amd64.deb
 wait $!
 rm docker-ce-cli_20.10.4~3-0~ubuntu-bionic_amd64.deb
-#
+# Install containerd.io
 curl -L https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/containerd.io_1.4.3-1_amd64.deb \
 -o containerd.io_1.4.3-1_amd64.deb && \
 dpkg -i containerd.io_1.4.3-1_amd64.deb
 wait $!
 rm containerd.io_1.4.3-1_amd64.deb
-#
+# Install docker-ce
 curl -L https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce_20.10.4~3-0~ubuntu-bionic_amd64.deb \
 -o docker-ce_20.10.4~3-0~ubuntu-bionic_amd64.deb && \
 dpkg -i docker-ce_20.10.4~3-0~ubuntu-bionic_amd64.deb 
 wait $!
 rm docker-ce_20.10.4~3-0~ubuntu-bionic_amd64.deb 
-#
+# Install docker-ce-rootless-extras
 curl -L https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/docker-ce-rootless-extras_20.10.4~3-0~ubuntu-bionic_amd64.deb \
 -o docker-ce-rootless-extras_20.10.4~3-0~ubuntu-bionic_amd64.deb && \
 dpkg -i docker-ce-rootless-extras_20.10.4~3-0~ubuntu-bionic_amd64.deb
 wait $!
 rm docker-ce-rootless-extras_20.10.4~3-0~ubuntu-bionic_amd64.deb
+# Install docker-compose 
+curl -L "https://github.com/docker/compose/releases/download/1.28.5/docker-compose-$(uname -s)-$(uname -m)" \
+-o /usr/bin/docker-compose
+wait $!
+chmod +x /usr/bin/docker-compose && \
+docker-compose --version
 # Setup bash completion for docker
 curl -L https://raw.githubusercontent.com/docker/compose/1.28.5/contrib/completion/bash/docker-compose \
 -o /etc/bash_completion.d/docker-compose
+wait $!
 fi
 # Test docker is working
 docker run hello-world
+sleep 3
 wait $!
 # Add docker user
 printf "\n\n${RED}Note:${NC}\n"

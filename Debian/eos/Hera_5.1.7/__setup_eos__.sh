@@ -48,8 +48,18 @@ apt install -y rar unrar zip unzip xz-utils p7zip-full p7zip-rar sharutils file-
 apt install -y apt-xapian-index synaptic gdebi dconf-editor && \
 apt install -y transmission-gtk && \
 apt install -y gparted filezilla && \
+apt install -y libreoffice-common && \
 #apt install -y sqlite3 && \
 apt install -y exfat-fuse exfat-utils net-tools && \
+apt install -y qml-module-qtquick2 qml-module-qtquick-controls2 \
+qml-module-qtquick-layouts qml-module-qtquick-templates2 \
+qml-module-qtquick-window2 qml-module-qtgraphicaleffects 
+curl -L https://downloads.raspberrypi.org/imager/imager_1.5_amd64.deb -o /tmp/imager_1.5_amd64.deb
+apt install -y libqt5quicktemplates2-5 libqt5quickcontrols2-5 \
+qml-module-qtquick2 qml-module-qtquick-controls2 \
+qml-module-qtquick-layouts qml-module-qtquick-templates2 \
+qml-module-qtquick-window2 qml-module-qtgraphicaleffects && \
+dpkg -i /tmp/imager_1.5_amd64.deb && rm  /tmp/imager_1.5_amd64.deb
 apt install -y git gitk git-gui git-flow
 wait $!
 [ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
@@ -240,6 +250,34 @@ wait $!
 # echo "deb http://apt.insynchq.com/ubuntu bionic non-free contrib" | tee /etc/apt/sources.list.d/insync.list
 # apt-get update
 # apt-get install insync
+##########################################################################
+# Install Express VPN
+mkdir -p /tmp/expvpn
+cd /tmp/expvpn
+gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 0xAFF2A1415F6A3A38 &&
+curl -fsSL https://www.expressvpn.com/expressvpn_release_public_key_0xAFF2A1415F6A3A38.asc -o /tmp/expvpn/expressvpn_release_public_key_0xAFF2A1415F6A3A38.asc &&
+gpg --import expressvpn_release_public_key_0xAFF2A1415F6A3A38.asc &&
+gpg --fingerprint release@expressvpn.com &&
+curl -fsSL https://www.expressvpn.works/clients/linux/expressvpn_3.6.0.70-1_amd64.deb.asc -o /tmp/expvpn/expressvpn_3.6.0.70-1_amd64.deb.asc &&
+curl -fsSL https://www.expressvpn.works/clients/linux/expressvpn_3.6.0.70-1_amd64.deb -o /tmp/expvpn/expressvpn_3.6.0.70-1_amd64.deb
+
+if [[ $? == 0 ]]; then
+    gpg --verify expressvpn_3.6.0.70-1_amd64.deb.asc && \
+    [[ $?  == 0 ]] && \
+    dpkg -i /tmp/expvpn/expressvpn_3.6.0.70-1_amd64.deb
+else
+    echo "Their was an error verifying signature..."
+    exit 1
+fi
+cd /tmp
+rm -rf /tmp/expvpn
+printf "\n\n${RED}Goto https://www.expressvpn.com/setup#linux and login to retrieve your activation code to complete installation.\n\nWant a graphical interface?\n
+Control ExpressVPN with our browser extension, which protects your whole device.\n\n
+For Chrome, run “expressvpn install-chrome-extension”.\n
+For Firefox, run “expressvpn install-firefox-extension”.\n
+${NC}\n\n"
+expressvpn activate
+wait $!
 ##########################################################################
 # Enable all Startup Applications
 #
