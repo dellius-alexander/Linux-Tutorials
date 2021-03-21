@@ -2,6 +2,29 @@
 ###############################################################################
 ###############################################################################
 set -e
+__USER__=""
+__USR_HME__=""
+###############################################################################
+__usr_hme__(){
+__USR_HME__=""
+while true; do
+read -p 'Enter username: ' v
+if [ ${#__USR_HME__} -eq 0 ]; then        
+    # check for user home directory
+    dir_=$(getent passwd | grep -i "$v" | cut -d ':' -f6)
+    if [ ${#dir_} -ne 0 ];  then
+        __USR_HME__=${dir_}
+        echo ${__USR_HME__}
+        sleep 3
+        break
+    else
+        __USR_HME__=""
+        echo "Your entry is not a directory..."
+        sleep 3
+    fi
+fi
+done
+}   # End of __usr_hme__
 RED='\033[0;31m' # Red
 NC='\033[0m' # No Color CAP
 ###############################################################################
@@ -278,27 +301,94 @@ For Firefox, run “expressvpn install-firefox-extension”.${NC}\n\n"
 expressvpn activate
 wait $!
 ##########################################################################
+# Install sdkmanager command line tool for android studios
+mkdir -p ${__USER__}/android-tools/android-sdk-linux/cmdline-tools
+#
+# Dependencies: 
+apt-get install -y autoconf build-essential curl default-jdk \
+gawk git gperf lib32stdc++6 lib32z1 lib32z1-dev libcurl4-openssl-dev \
+unzip zlib1g-dev
+#
+# Install Command line tools
+_sha256checksum_cli="87f6dcf41d4e642e37ba03cb2e387a542aa0bd73cb689a9e7152aad40a6e7a08"
+curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip -o commandlinetools-linux-6858069_latest.zip
+[ $(sha256sum commandlinetools-linux-6858069_latest.zip | cut -d " " -f-1) == ${_sha256checksum_cli} ] && \
+printf "\nChecksum verified...\nSafe to use cmdline-tools...\n" && \
+unzip ${__USER__}/Downloads/commandlinetools-linux-6200805_latest.zip -d ${__USER__}/android-tools/android-sdk-linux/cmdline-tools
+#
+# # Install Android studio's
+# _sha256checksum_studio="f599749ca47cda06d392e2764017c8a8a0c7b963a6a88ed494b432bece7cbc1b"
+# curl -fsSL https://redirector.gvt1.com/edgedl/android/studio/ide-zips/4.1.3.0/android-studio-ide-201.7199119-linux.tar.gz -o android-studio-ide-201.7199119-linux.tar.gz && \
+# [ $(sha256sum android-studio-ide-201.7199119-linux.tar.gz | cut -d " " -f-1) = ${_sha256checksum_studio} ] && \
+# [ $? == 0 ] && docker load -i ./android-studio-ide-201.7199119-linux.tar.gz 
+#
+# Install Platform tools
+# TODO: finish installation script
+#https://dl.google.com/android/repository/platform-tools-latest-linux.zip
+#
+##########################################################################
+# Verify & setup swap partition to persist crashes
+# if swap exists & resume file exists
+if [ $(blkid | grep -ic "swap") == 1 ] && [ -e "/etc/initramfs-tools/conf.d/resume" ]; then
+    if [ $(cat "/etc/initramfs-tools/conf.d/resume" | grep -i "RESUME" | cut -d "=" -f3) = $(blkid | awk -F\" '/swap/ {print $2}') ]; then
+        printf "\n\nSwap partition is setup......\n\n"
+    else
+        printf "\nRESUME=UUID=$(blkid | awk -F\" '/swap/ {print $2}')\n" >> /etc/initramfs-tools/conf.d/resume
+        update-initramfs -u -k all  # update initramfs so it loads swap at boot
+        wait $!
+    fi
+# if swap exists & resume file not exist
+elif [ $(blkid | grep -ic "swap") == 1 ] && [ ! -e "/etc/initramfs-tools/conf.d/resume" ]; then
+    printf "RESUME=UUID=$(blkid | awk -F\" '/swap/ {print $2}')\n" | sudo tee /etc/initramfs-tools/conf.d/resume
+    update-initramfs -u -k all  # update initramfs so it loads swap at boot
+    wait $!
+else
+    echo "No swap found..."
+# if their is not swap then do nothing else...
+fi
+# Adjusting the Swappiness Value #
+
+# Swappiness is a Linux kernel property that defines how often the system 
+# will use the swap space. Swappiness can have a value between 0 and 100. 
+# A low value will make the kernel to try to avoid swapping whenever 
+# possible, while a higher value will make the kernel to use the swap 
+# space more aggressively.
+
+# The default swappiness value is 60. You can check the current swappiness 
+# value by typing the following command: (60 is OK for most Linux systems; 
+# 10 is ok for production servers)
+#cat /proc/sys/vm/swappiness
+#
+# To set the swappiness value to 10, run:
+#sysctl vm.swappiness=10
+
+# To make this parameter persistent across reboots, append the following 
+# line to the /etc/sysctl.conf file: [ vm.swappiness=10 ]
+
+
+
+##########################################################################
 # Enable all Startup Applications
 #
 cd /etc/xdg/autostart
 sed --in-place 's/NoDisplay=true/NoDisplay=false/g' *.desktop
-
+##########################################################################
 # Disable single click in pantheon
 #
 gsettings set io.elementary.files.preferences single-click false
-
+##########################################################################
 # Accelerate startup
 #
 mv /etc/xdg/autostart/at-spi-dbus-bus.desktop /etc/xdg/autostart/at-spi-dbus-bus.disabled
-#
+##########################################################################
 # Update graphics drivers
 #
 ubuntu-drivers devices
 ubuntu-drivers autoinstall
-
+##########################################################################
 # Fix samba
 chmod 744 /usr/lib/gvfs/gvfsd-smb-browse
-
+##########################################################################
 # Clean
 apt autoremove
 apt -y autoclean
