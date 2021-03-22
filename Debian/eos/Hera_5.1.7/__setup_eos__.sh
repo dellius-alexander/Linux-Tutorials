@@ -25,6 +25,7 @@ if [ ${#__USR_HME__} -eq 0 ]; then
 fi
 done
 }   # End of __usr_hme__
+
 RED='\033[0;31m' # Red
 NC='\033[0m' # No Color CAP
 ###############################################################################
@@ -84,6 +85,9 @@ qml-module-qtquick-layouts qml-module-qtquick-templates2 \
 qml-module-qtquick-window2 qml-module-qtgraphicaleffects && \
 dpkg -i /tmp/imager_1.5_amd64.deb && rm  /tmp/imager_1.5_amd64.deb
 apt install -y git gitk git-gui git-flow
+wait $!
+# android CLI tools dependencies
+apt-get install -y autoconf build-essential curl default-jdk gawk git gperf lib32stdc++6 lib32z1 lib32z1-dev libcurl4-openssl-dev unzip zlib1g-dev
 wait $!
 [ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 # Set python 3.6.x as default.
@@ -302,25 +306,45 @@ expressvpn activate
 wait $!
 ##########################################################################
 # Install sdkmanager command line tool for android studios
-mkdir -p ${__USER__}/android-tools/android-sdk-linux/cmdline-tools
+[ ! -d "~/android-tools/android-sdk-linux/cmdline-tools" ] && mkdir -p ~/android-tools/android-sdk-linux &>/dev/null
 #
 # Dependencies: 
-apt-get install -y autoconf build-essential curl default-jdk \
-gawk git gperf lib32stdc++6 lib32z1 lib32z1-dev libcurl4-openssl-dev \
-unzip zlib1g-dev
+apt-get install -y autoconf build-essential curl default-jdk gawk \
+git gperf lib32stdc++6 lib32z1 lib32z1-dev libcurl4-openssl-dev unzip \
+zlib1g-dev
 #
-# Install Command line tools
-_sha256checksum_cli="87f6dcf41d4e642e37ba03cb2e387a542aa0bd73cb689a9e7152aad40a6e7a08"
-curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip -o commandlinetools-linux-6858069_latest.zip
-[ $(sha256sum commandlinetools-linux-6858069_latest.zip | cut -d " " -f-1) == ${_sha256checksum_cli} ] && \
-printf "\nChecksum verified...\nSafe to use cmdline-tools...\n" && \
-unzip ${__USER__}/Downloads/commandlinetools-linux-6200805_latest.zip -d ${__USER__}/android-tools/android-sdk-linux/cmdline-tools
-#
+# Install SDK Command line tools
+_sha256checksum_cli="^(87f6dcf41d4e642e37ba03cb2e387a542aa0bd73cb689a9e7152aad40a6e7a08)?$"
+curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip \
+-o $HOME/Downloads/commandlinetools-linux-6858069_latest.zip
+wait $!
+_verify_sha256checksum_cli="$(sha256sum ~/Downloads/commandlinetools-linux-6858069_latest.zip | cut -d ' ' -f-1)"
+if [ ${_verify_sha256checksum_cli} =~ ${_sha256checksum_cli} ]; then
+    printf "\n\nChecksum verified...\n\nSafe to use cmdline-tools...\n\n" 
+    unzip -o $HOME/Downloads/commandlinetools-linux-6858069_latest.zip \
+    -d /usr/local/etc/android-tools/android-sdk-linux/
+else
+    printf "\n\nChecksum verification failed......\n\n"
+fi
+chown dalexander:dalexander -R ~/android-tools
+apt-get update -y && \
+apt-get upgrade -y
+wait $!
+ln -s /usr/local/etc/android-tools/android-sdk-linux/cmdline-tools/bin/* /usr/local/bin
+rm -rf ~/Downloads/commandlinetools-linux-6858069_latest.zip
+
 # # Install Android studio's
-# _sha256checksum_studio="f599749ca47cda06d392e2764017c8a8a0c7b963a6a88ed494b432bece7cbc1b"
-# curl -fsSL https://redirector.gvt1.com/edgedl/android/studio/ide-zips/4.1.3.0/android-studio-ide-201.7199119-linux.tar.gz -o android-studio-ide-201.7199119-linux.tar.gz && \
-# [ $(sha256sum android-studio-ide-201.7199119-linux.tar.gz | cut -d " " -f-1) = ${_sha256checksum_studio} ] && \
-# [ $? == 0 ] && docker load -i ./android-studio-ide-201.7199119-linux.tar.gz 
+# _sha256checksum_studio="^(f599749ca47cda06d392e2764017c8a8a0c7b963a6a88ed494b432bece7cbc1b)?$"
+# curl -fsSL https://redirector.gvt1.com/edgedl/android/studio/ide-zips/4.1.3.0/android-studio-ide-201.7199119-linux.tar.gz -o $HOME/Downloads/android-studio-ide-201.7199119-linux.tar.gz 
+# wait $! 
+# _verify_sha256checksum_studio=$(sha256sum $HOME/Downloads/android-studio-ide-201.7199119-linux.tar.gz | cut -d " " -f-1)
+# if [ ${_verify_sha256checksum_studio} =~ ${_sha256checksum_studio} ]; then
+#     printf "\n\nChecksum verified...\n\nSafe to use Android Studios...\n\n"
+#     tarz -tvf  $HOME/Downloads/android-studio-ide-201.7199119-linux.tar.gz 
+# else
+#     printf "\n\nChecksum verification failed......\n\n" 
+# fi
+# # docker load -i ./android-studio-ide-201.7199119-linux.tar.gz 
 #
 # Install Platform tools
 # TODO: finish installation script
