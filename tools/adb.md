@@ -1,12 +1,44 @@
 # ADB Debugging Commands
 
-## Package Installation
+## ADB Basics
 
 ```bash
-adb shell install <apk> # (install app)
-adb shell install <path> # (install app from phone path)
-adb shell install -r <path> # (install app from phone path)
+adb connect <device ip address> # (connect to specific device via ip address)
+adb devices # (lists connected devices)
+adb root # (restarts adbd with root permissions)
+adb start-server # (starts the adb server)
+adb kill-server # (kills the adb server)
+adb reboot # (reboots the device)
+adb devices -l # (list of devices by product/model)
+adb shell # (starts the backround terminal)
+exit # (exits the background terminal)
+adb help # (list all commands)
+adb -s <deviceName> <command> # (redirect command to specific device)
+adb –d <command> # (directs command to only attached USB device)
+adb –e <command> # (directs command to only attached emulator)
+```
+
+## Package Installation & Info
+
+```bash
+adb shell install <path-to-apk-file> # (install app from phone path)
+adb shell install -r <path-to-apk-file> # (install app from phone path)
 adb shell uninstall <name> # (remove the app)
+adb shell list packages # (list package names)
+adb shell list packages -r # (list package name + path to apks)
+adb shell list packages -3 # (list third party package names)
+adb shell list packages -s # (list only system packages)
+adb shell list packages -u # (list package names + uninstalled)
+adb shell dumpsys package packages # (list info on all apps)
+adb shell dump <name> # (list info on one package)
+adb shell path <package> # (path to the apk file)
+adb shell pm list packages -f # (see a list of all the installed APKs and their package names)
+```
+
+## Running your App
+
+```bash
+adb shell am start -n <path-to-app-on-device | app-name> # (send a launch intent to your app on the device)
 ```
 
 ## Path's
@@ -26,7 +58,6 @@ adb shell ls -s # (print size of each file)
 adb shell ls -R # (list subdirectories recursively)
 ```
 
-
 ## File Operations
 
 ```bash
@@ -35,7 +66,7 @@ adb pull <remote> <local> # (copy file/dir from device)
 run-as <package> cat <file> # (access the private package files)
 ```
 
-## Phone Info
+## Device Related Info
 
 ```bash
 adb get-statе # (print device state)
@@ -50,19 +81,6 @@ adb shell dumpsys activity <package>/<activity> # (activity info)
 adb shell ps (print process status)
 adb shell wm size # (displays the current screen resolution)
 dumpsys window windows | grep -E 'mCurrentFocus|mFocusedApp' # (print current app's opened activity)
-```
-
-## Package Info
-
-```bash
-adb shell list packages # (list package names)
-adb shell list packages -r # (list package name + path to apks)
-adb shell list packages -3 # (list third party package names)
-adb shell list packages -s # (list only system packages)
-adb shell list packages -u # (list package names + uninstalled)
-adb shell dumpsys package packages # (list info on all apps)
-adb shell dump <name> # (list info on one package)
-adb shell path <package> # (path to the apk file)
 ```
 
 ## Configure Settings Commands
