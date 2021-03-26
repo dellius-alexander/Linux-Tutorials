@@ -389,8 +389,85 @@ fi
 # To make this parameter persistent across reboots, append the following 
 # line to the /etc/sysctl.conf file: [ vm.swappiness=10 ]
 
+##########################################################################
+# Install Cypress Locally
+cd ~
+# install dependencies
+apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev \
+libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb 
+# create a few directories for our project and runtime cache
+mkdir -pv ~/cypress_projects &>/dev/null || true
+mkdir -pv ~/cypress_projects/cypress_cache &>/dev/null || true
 
+cd ~/Downloads
+# download, unzip and move node to /usr/local/share directory
+curl -fsSL https://nodejs.org/dist/v14.16.0/node-v14.16.0-linux-x64.tar.xz \
+-o ~/Downloads/node-v14.16.0-linux-x64.tar.xz
 
+# xz -dv ~/Downloads/node-v14.16.0-linux-x64.tar.xz ~/Downloads/node-v14.16.0-linux-x64.tar
+
+tar -xvf ~/Downloads/node-v14.16.0-linux-x64.tar.xz \
+$pwd/node-v14.16.0-linux-x64
+
+wait $!
+
+mv -i $pwd/node-v14.16.0-linux-x64 /usr/local/share/node-v14.16.0-linux-x64
+
+wait $!
+
+# Add node to PATH
+if [ -d ${NODEJS_HOME} ] && [ $(env | grep -i "path" | grep -ic "node") == 0 ]; then
+# persist reboots
+cat >> ~/.bash_aliases<<EOF
+\n\n#####################################################################
+#####################################################################
+#########################  NodeJS Binaries  #########################
+# NodeJS
+export NODEJS_HOME=/usr/local/share/node-v14.16.0-linux-x64/bin/
+if [ $(env | grep -i path | grep -ic "node") == 0 ] && [ -f "$NODEJS_HOME/node"  ]; then
+    export PATH=$NODEJS_HOME:$PATH
+fi\n
+#####################################################################
+#####################################################################
+EOF
+# setup cypress project config file
+source ~/.bash_aliases
+#
+wait $!
+cat >>~/cypress_projects/cypress.json<<EOF
+{
+    "baseUrl": "https://google.com",
+    "env": {
+        "CYPRESS_CACHE_FOLDER": "~/cypress/cypress_cache npm install"
+    },
+    "pageLoadTimeout": 60000,
+    "viewportWidth": 1920,
+    "viewportHeight": 1080
+}
+EOF
+# project global configurations file
+cat >>~/cypress_projects/package.json <<EOF
+{
+  "name": "cypress-test-suite-demo",
+  "description": "Example full e2e test code coverage.",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
+  },
+  "devDependencies": {
+    "cypress": "^6.8.0"
+  },
+  "license": "MIT"
+}
+EOF
+cd ~/cypress_projects
+npm install cypress --save-dev
+fi
+##########################################################################
+# Setup/update drivers automatically
+if [ $(ubuntu-drivers devices | grep -ic 'recommended') -gt 0 ]; then
+    ubuntu-drivers autoinstall
+fi
 ##########################################################################
 # Enable all Startup Applications
 #
@@ -405,10 +482,7 @@ gsettings set io.elementary.files.preferences single-click false
 #
 mv /etc/xdg/autostart/at-spi-dbus-bus.desktop /etc/xdg/autostart/at-spi-dbus-bus.disabled
 ##########################################################################
-# Update graphics drivers
-#
-ubuntu-drivers devices
-ubuntu-drivers autoinstall
+
 ##########################################################################
 # Fix samba
 chmod 744 /usr/lib/gvfs/gvfsd-smb-browse
