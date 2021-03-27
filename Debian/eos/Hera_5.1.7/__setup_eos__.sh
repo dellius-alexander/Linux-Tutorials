@@ -389,80 +389,122 @@ fi
 # To make this parameter persistent across reboots, append the following 
 # line to the /etc/sysctl.conf file: [ vm.swappiness=10 ]
 
-##########################################################################
+##################################################################################
+##################################################################################
+set -e
 # Install Cypress Locally
-cd ~
+HOME="/home/dalexander"
+USER="dalexander"
+##################################################################################
+cd $HOME/Downloads
+# create installation directory for cypress and custom cache location 
+mkdir -p $HOME/cypress_projects &>/dev/null &&
+mkdir -p $HOME/cypress_projects/.cache &>/dev/null &&
+export NODEJS_HOME="/usr/local/share/node-v14.16.0-linux-x64/bin/"
+export CYPRESS_CACHE_FOLDER="$HOME/cypress_projects/.cache"
+export CYPRESS_PROJECT_DIR="$HOME/cypress_projects/"
+echo $CYPRESS_CACHE_FOLDER
+export $CYPRESS_PROJECT_DIR
+echo $NODEJS_HOME
+export OLD_PATH=$PATH
+
 # install dependencies
 apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev \
 libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb 
-# create a few directories for our project and runtime cache
-mkdir -pv ~/cypress_projects &>/dev/null || true
-mkdir -pv ~/cypress_projects/cypress_cache &>/dev/null || true
 
-cd ~/Downloads
+#cd $HOME/Downloads
 # download, unzip and move node to /usr/local/share directory
+echo "Downloading nodejs......"
+sleep 3
 curl -fsSL https://nodejs.org/dist/v14.16.0/node-v14.16.0-linux-x64.tar.xz \
--o ~/Downloads/node-v14.16.0-linux-x64.tar.xz
+-o $HOME/Downloads/node-v14.16.0-linux-x64.tar.xz &&
 
 # xz -dv ~/Downloads/node-v14.16.0-linux-x64.tar.xz ~/Downloads/node-v14.16.0-linux-x64.tar
+echo "moving node to /usr/local/share......"
+sleep 3
+tar -xvf $HOME/Downloads/node-v14.16.0-linux-x64.tar.xz -C /usr/local/share/ 
 
-tar -xvf ~/Downloads/node-v14.16.0-linux-x64.tar.xz \
-$pwd/node-v14.16.0-linux-x64
-
-wait $!
-
-mv -i $pwd/node-v14.16.0-linux-x64 /usr/local/share/node-v14.16.0-linux-x64
-
-wait $!
-
+echo
+echo "Setting up node to persist reboots......"
+sleep 3
 # Add node to PATH
-if [ -d ${NODEJS_HOME} ] && [ $(env | grep -i "path" | grep -ic "node") == 0 ]; then
-# persist reboots
-cat >> ~/.bash_aliases<<EOF
-\n\n#####################################################################
+node_env=$(cat $HOME/.bash_aliases | grep -ic "NODEJS_HOME" )
+if [ $node_env -gt 1 ]; then
+  # persist reboots
+  cat >>$HOME/.bash_aliases<<EOF
+#####################################################################
 #####################################################################
 #########################  NodeJS Binaries  #########################
 # NodeJS
-export NODEJS_HOME=/usr/local/share/node-v14.16.0-linux-x64/bin/
-if [ $(env | grep -i path | grep -ic "node") == 0 ] && [ -f "$NODEJS_HOME/node"  ]; then
-    export PATH=$NODEJS_HOME:$PATH
-fi\n
-#####################################################################
-#####################################################################
+export NODEJS_HOME="/usr/local/share/node-v14.16.0-linux-x64/bin/"
+export CYPRESS_CACHE_FOLDER="$HOME/cypress_projects/cypress_cache npm install"
+
 EOF
 # setup cypress project config file
-source ~/.bash_aliases
-#
-wait $!
-cat >>~/cypress_projects/cypress.json<<EOF
-{
-    "baseUrl": "https://google.com",
-    "env": {
-        "CYPRESS_CACHE_FOLDER": "~/cypress/cypress_cache npm install"
-    },
-    "pageLoadTimeout": 60000,
-    "viewportWidth": 1920,
-    "viewportHeight": 1080
-}
-EOF
-# project global configurations file
-cat >>~/cypress_projects/package.json <<EOF
-{
-  "name": "cypress-test-suite-demo",
-  "description": "Example full e2e test code coverage.",
-  "scripts": {
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
-  },
-  "devDependencies": {
-    "cypress": "^6.8.0"
-  },
-  "license": "MIT"
-}
-EOF
-cd ~/cypress_projects
-npm install cypress --save-dev
 fi
+#
+#
+
+  echo "Setting up cypress environment......"
+  cat >$CYPRESS_PROJECT_DIR/cypress.json<<EOF
+  {
+      "baseUrl": "https://dellius-alexander.github.io/responsive_web_design/",
+      "env": {
+          "CYPRESS_CACHE_FOLDER": "~/cypress/cypress_cache npm install"
+      },
+      "pageLoadTimeout": 60000,
+      "viewportWidth": 1920,
+      "viewportHeight": 1080
+  }
+EOF
+#
+  # project global configurations file
+  cat >$CYPRESS_PROJECT_DIR/package.json <<EOF
+  {
+    "name": "cypress-test-suite-demo",
+    "description": "Example full e2e test code coverage.",
+    "scripts": {
+      "cypress:open": "cypress open",
+      "cypress:run": "cypress run"
+    },
+    "devDependencies": {
+      "cypress": "^6.8.0"
+    },
+    "license": "MIT"
+  }
+EOF
+  echo "Home Directory: $HOME"
+  cd $CYPRESS_PROJECT_DIR
+  sleep 3
+  echo "Location of cypress install location: $CYPRESS_PROJECT_DIR"
+  printf "\n\n"
+  echo "Installing Cypress....."
+  # verify node added to path
+  if [ $(echo ${PATH} | grep -ic 'node-v14.16.0-linux-x64') -eq 0 ]; then
+    export PATH="$NODEJS_HOME:$PATH"
+  fi
+  sleep 2
+  npm i -D cypress  
+  sleep 2
+  npm i -D cypress-xpath
+  sleep 2
+  wait $!
+  if [ -f 'cypress/support/index.js' ]; then
+cat >>cypress/support/index.js<<EOF
+// -----------------------------------------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+// Install cypress-xpath
+///////////////////////////////
+// w: npm install -D cypress-xpath
+// w: yarn add cypress-xpath --dev
+// Then include in your project's cypress/support/index.js
+require('cypress-xpath')
+EOF
+fi
+# Take ownership of the project folder
+chown $USER:$USER -R $CYPRESS_PROJECT_DIR
+rm $HOME/Downloads/node-v14.16.0-linux-x64.tar.xz
 ##########################################################################
 # Setup/update drivers automatically
 if [ $(ubuntu-drivers devices | grep -ic 'recommended') -gt 0 ]; then

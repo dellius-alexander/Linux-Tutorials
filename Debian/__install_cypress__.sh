@@ -6,22 +6,23 @@ HOME="/home/dalexander"
 USER="dalexander"
 ##################################################################################
 cd $HOME/Downloads
-echo "$(command -v npm)"
+# create installation directory for cypress and custom cache location 
+mkdir -p $HOME/cypress_projects &>/dev/null || true &&
+mkdir -p $HOME/cypress_projects/.cache &>/dev/null || true &&
 export NODEJS_HOME="/usr/local/share/node-v14.16.0-linux-x64/bin/"
 export CYPRESS_CACHE_FOLDER="$HOME/cypress_projects/.cache"
+export CYPRESS_PROJECT_DIR="$HOME/cypress_projects/"
 echo $CYPRESS_CACHE_FOLDER
+export $CYPRESS_PROJECT_DIR
 echo $NODEJS_HOME
-OLD_PATH=$PATH
+export OLD_PATH=$PATH
 
 # install dependencies
 apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev \
 libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb 
-# create a few directories for our project and runtime cache
-mkdir -p $HOME/cypress_projects &>/dev/null || true &&
-mkdir -p $HOME/cypress_projects/.cache &>/dev/null || true &&
-CYPRESS_PROJECT_DIR="$HOME/cypress_projects/"
-# Take ownership of the project folder
-chown $USER:$USER -R $CYPRESS_PROJECT_DIR
+
+
+
 #cd $HOME/Downloads
 # download, unzip and move node to /usr/local/share directory
 echo "Downloading nodejs......"
@@ -36,8 +37,6 @@ tar -xvf $HOME/Downloads/node-v14.16.0-linux-x64.tar.xz -C /usr/local/share/
 
 echo
 echo "Setting up node to persist reboots......"
-HOME="/home/dalexander"
-CYPRESS_PROJECT_DIR="$HOME/cypress_projects/.cache"
 sleep 3
 # Add node to PATH
 node_env=$(cat $HOME/.bash_aliases | grep -ic "NODEJS_HOME" )
@@ -95,9 +94,25 @@ EOF
   if [ $(echo ${PATH} | grep -ic 'node-v14.16.0-linux-x64') -eq 0 ]; then
     export PATH="$NODEJS_HOME:$PATH"
   fi
-  sleep 3
-  $NODEJS_HOME/npm install cypress --save-dev  
+  sleep 2
+  npm i -D cypress  
+  sleep 2
+  npm i -D cypress-xpath
   wait $!
-rm $HOME/Downloads/node-v14.16.0-linux-x64.tar.xz
-
-PATH=$OLD_PATH
+  if [ -f 'cypress/support/index.js' ]; then
+cat >>cypress/support/index.js<<EOF
+// -----------------------------------------------------------
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+// Install cypress-xpath
+///////////////////////////////
+// w: npm install -D cypress-xpath
+// w: yarn add cypress-xpath --dev
+// Then include in your project's cypress/support/index.js
+require('cypress-xpath')
+EOF
+fi
+# Take ownership of the project folder
+chown $USER:$USER -R $CYPRESS_PROJECT_DIR
+npx cypress open &
+exit 0
