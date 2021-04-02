@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 ##########################################################################
+# Command to assign port:
+# semanage port -a -t ssh_port_t -p tcp < #PORTNUMBER >
+# Command to verify post assignment:
+# ss -tlnp | grep -i < #PORTNUMBER >
+##########################################################################
 #                       Environment Variables
 ##########################################################################
 RED='\033[0;31m'        # Red
@@ -8,11 +13,11 @@ NC='\033[0m'            # No Color  CAP
 function assign_port()
 {
 #   check if input is empty
-if [ -z ${1} ]; then
+if [ ${#} -ne 1 ]; then
         echo "You must provide a parameter. Please try again..."
         printf "\nUsage:${RED} $0 <port number>${NC}\n"
         exit 1
-#   check if port already exists    
+#   check if port already exists
 elif [ $(echo $(ss -tlnp | grep -c ${1})) -gt 0 ]; then
         printf "\n${RED}WARNING${NC}: Port number ${RED}${1}${NC} already assigned...\n"
         exit 1
