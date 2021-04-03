@@ -24,6 +24,7 @@ A context is a combination of several properties. These include:
 - Endpoint configuration
 - TLS info
 - Orchestrator
+
 ```
 
 *Note: The given `USERNAME` must have permissions to access the docker socket on the remote machine. Refer to [manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) to learn how to give a non-root user access to the docker socket.*
