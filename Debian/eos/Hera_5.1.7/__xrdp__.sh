@@ -34,12 +34,25 @@ if [ -f /var/run/reboot-required ]; then
     echo "Please reboot and re-run this script to finish the install." >&2
     exit 1
 fi
-
+###############################################################################
+# Setup hyper-v settings modules by edit the “modules” file located in 
+#     /etc/initramfs-tools
+# Microsoft provides Linux Integration Services (LIS), which are 
+#     basically Microsoft’s version of VMware Tools.
+if [ $(systemd-detect-virt) == 'microsoft' ]; then
+cat >>/etc/initramfs-tools/modules<<EOF
+hv_vmbus
+hv_storvsc
+hv_blkvsc
+hv_netvsc
+EOF
+fi
 ###############################################################################
 # XRDP
 #
 
 # Install hv_kvp utils
+apt install -y linux-virtual
 apt install -y linux-tools-virtual${HWE}
 apt install -y linux-cloud-tools-virtual${HWE}
 
@@ -108,6 +121,8 @@ systemctl start xrdp
 #
 # End XRDP
 ###############################################################################
+# update boot image
+update-initramfs -u
 
 echo "Install is complete."
 echo "Reboot your machine to begin using XRDP."

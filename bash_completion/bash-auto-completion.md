@@ -18,7 +18,7 @@ However, the completion script depends on <a href="https://github.com/scop/bash-
 
 ## <a id="install-bash-completion">Install bash-completion</a>
 
-bash-completion is provided by many package managers (see <a href="https://github.com/scop/bash-completion#installation">here</a>). You can install it with <code>apt-get install bash-completion</code> or <code>yum install bash-completion</code>, etc.
+bash-completion is provided by many package managers (see <a href="https://github.com/scop/bash-completion#installation">here</a>). You can install it with <code>apt-get install bash-completion bash-completion-extras</code> or <code>yum install bash-completion bash-completion-extras</code>, etc.
 
 <p>The above commands create <code>/usr/share/bash-completion/bash_completion</code>, which is the main script of bash-completion. Depending on your package manager, you have to manually source this file in your <code>~/.bashrc</code> file. To find out, reload your shell and run <code>type _init_completion</code>. If the command succeeds, you're already set, otherwise add the following to your <code>~/.bashrc</code> file:</p>
 
@@ -26,7 +26,9 @@ bash-completion is provided by many package managers (see <a href="https://githu
 </div>
 Reload your shell by typing <code>bash</code> on the CLi and verify that bash-completion is correctly installed by typing <code>type _init_completion</code>.
 
-## <a id="enable-kubectl-autocompletion">Enable kubectl autocompletion</a>
+---
+
+## <h2><a id="enable-kubectl-autocompletion">Enable kubectl autocompletion</a></h2>
 
 You now need to ensure that the kubectl completion script gets sourced in all your shell sessions. There are two ways in which you can do this:
 
@@ -52,3 +54,9 @@ You now need to ensure that the kubectl completion script gets sourced in all yo
 
 <p>Both approaches are equivalent. After reloading your shell, kubectl autocompletion should be working.</p
 
+---
+---
+
+## <h2><a id="Docker-Command-line-completion" href="https://docs.docker.com/compose/completion/">Docker Command-line completion</a> </h2>
+
+### TODO...
