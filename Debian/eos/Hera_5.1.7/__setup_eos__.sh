@@ -74,6 +74,7 @@ apt install -y transmission-gtk && \
 apt install -y gparted filezilla && \
 apt install -y libreoffice-common && \
 apt install -y xclip && \
+apt install -y bind-utils && \
 #apt install -y sqlite3 && \
 apt install -y exfat-fuse exfat-utils net-tools && \
 apt install -y qml-module-qtquick2 qml-module-qtquick-controls2 \
