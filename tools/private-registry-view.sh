@@ -87,7 +87,6 @@ if [[ "$1" =~ ^(--list)$ ]] || [[ "$3" =~ ^(--list)$ ]] ; then
         RESULTS=($(curl -X GET --user ${REMOTE_ADMIN_ACCOUNT}:${REGISTRY_PASS} ${REMOTE_REGISTRY_HOST}/v2/${2}/tags/list 2>/dev/null))
         RESULTS=($(echo ${RESULTS} | tr -d '{' | tr -d '}' | tr -d '[' | tr -d ']' | tr -d '\"'))
         _list_repo ${RESULTS[@]}
-        fi
-        
+        fi        
 fi
 printf "\nUsage: ${0} --help\n"
