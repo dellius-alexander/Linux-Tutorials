@@ -44,7 +44,7 @@ _list_repo(){
         for c in ${splitIFS[@]}; 
         do
                 if [[ $cnt -lt 1 ]]; then
-                        printf "\n$c \n"
+                        printf "\n${c:0:5}${c:5}\n"
                 fi
                 if [ $cnt -gt 0 ] && [ $cnt -lt $((${#splitIFS[@]} - 1)) ]; then
                         echo -n "$c, "
