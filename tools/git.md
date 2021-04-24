@@ -1,6 +1,7 @@
 # GIT Command Reference
 
-### Fixing missing origin remote
+## Fixing missing origin remote
+
 ```bash
 $ git push -u origin main
 fatal: 'origin' does not appear to be a git repository
