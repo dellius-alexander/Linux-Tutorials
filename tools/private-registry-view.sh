@@ -12,7 +12,7 @@ REMOTE_REGISTRY_HOST="${REMOTE_PRIVATE_REGISTRY}"
 #       Enter remote registry v2 ssh admin account for the above host
 REMOTE_ADMIN_ACCOUNT="${REMOTE_ADMIN_ACCOUNT}"
 ##########################################################################
-_list(){
+_list(){ 
         RESULTS="${1}"
         cnt=0
         #RESULTS=${RESULTS[@]}  # Checking formatted values
@@ -57,7 +57,6 @@ _list_repo(){
         exit 0
 
 }
-
 ##########################################################################
 if [[ "$1" =~ ^(--help)$ ]]; then
         printf "\nUsage:  ${0} [REMOTE_REGISTRY_HOST] [REMOTE_ADMIN_ACCOUNT]\n"
@@ -89,11 +88,6 @@ if [[ "$1" =~ ^(--list)$ ]] || [[ "$3" =~ ^(--list)$ ]] ; then
         RESULTS=($(echo ${RESULTS} | tr -d '{' | tr -d '}' | tr -d '[' | tr -d ']' | tr -d '\"'))
         _list_repo ${RESULTS[@]}
         fi
-        #${string:position:length}
-
-
         
-        #RESULTS=${RESULTS[@]}  # Checking formatted values
-
 fi
 printf "\nUsage: ${0} --help\n"
