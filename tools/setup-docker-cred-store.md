@@ -101,8 +101,9 @@ Follow the steps to setup the standard unix password manager to be used by docke
 
 7. Add an entry to `~/.docker/config.json` for to use our new `credential store`.
 
-    ```JSON
+    ```bash
     {
+        "auths": {}
         "credsStore": "pass"
     }
 
