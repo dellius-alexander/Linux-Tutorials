@@ -162,7 +162,6 @@ Follow the steps to setup the standard unix password manager to be used by docke
     $ pass git push
     # Or you may need to use
     $ pass git push --set-upstream <server unique name> master
-    # Output
     Counting objects: 6, done.
     Delta compression using up to 8 threads.
     Compressing objects: 100% (3/3), done.
@@ -171,4 +170,6 @@ Follow the steps to setup the standard unix password manager to be used by docke
     To [username]@[url/address]:~/.password-store
      * [new branch]      master -> master
     Branch 'master' set up to track remote branch 'master' from '<server unique name>'.
+    # Or you may clone a remote password-store to another host
+    $ git clone <user>@<server>:~/.password-store
     ```
