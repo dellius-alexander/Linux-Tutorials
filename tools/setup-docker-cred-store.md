@@ -58,6 +58,22 @@ Follow the steps to setup the standard unix password manager to be used by docke
 
     *`Pass` uses a GPG key pair to encrypt password files. If you don’t already have a suitable key pair, you can generate one by following these instructions to [Creating GPG Keys Using the Command Line](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/security_guide/sect-security_guide-encryption-gpg-creating_gpg_keys_using_the_command_line) for `RHEL/CentOS` distro's. See [Unattended-GPG-key-generation](https://www.gnupg.org/documentation/manuals/gnupg-devel/Unattended-GPG-key-generation.html) for unattented key generation.*
 
+    Generate gpg key unattended:
+
+    ```yml
+    # Create a file gen-key-script below and
+    # Run the command: "gpg --batch --gen-key gen-key-script" 
+    Key-Type: 1
+    Key-Length: 2048
+    Subkey-Type: 1
+    Subkey-Length: 2048
+    Name-Real: root superuser
+    Name-Email: email.address@mail.server.com
+    Expire-Date: 0
+    ```
+
+    Generate gpg key manually:
+
     ```bash
     # On Debian distro enter:
     $ gpg --generate-key
