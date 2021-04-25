@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ##########################################################################
-#  curl -X GET --user dalexander:$(echo -n ${REGISTRY_PASS} | base64 -d) https://registry.dellius.app/v2/_catalog 
+#
 # Registry Password
 if [ ${#REGISTRY_PASS} -gt 0 ]; then
 REGISTRY_PASS=$(echo -n ${REGISTRY_PASS} | base64 -d)  # Variable must be a base64 --encoded {hash}
