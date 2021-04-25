@@ -1,5 +1,6 @@
 # Msi-Install function
-function install-msi($file){
+function install-msi(){
+    
     if ($null -eq $file){
         Write-Output 'You must enter an input msi file...'
         exit 1
@@ -19,5 +20,5 @@ function install-msi($file){
     # )
     # Start-Process "msiexec.exe" -ArgumentList $MSIArguments -Wait -NoNewWindow
 }
-install-msi ${1}
+install-msi
     

@@ -60,16 +60,18 @@ Follow the steps to setup the standard unix password manager to be used by docke
 
     Generate gpg key unattended:
 
-    ```yml
+    ```bash
     # Create a file gen-key-script below and
-    # Run the command: "gpg --batch --gen-key gen-key-script" 
+    # Run the command: "gpg --batch --gen-key gen-key-script"
+    $ gpg --batch --gen-key <<EOF
     Key-Type: 1
     Key-Length: 2048
     Subkey-Type: 1
     Subkey-Length: 2048
-    Name-Real: root superuser
+    Name-Real: superuser name
     Name-Email: email.address@mail.server.com
     Expire-Date: 0
+    EOF
     ```
 
     Generate gpg key manually:
