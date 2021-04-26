@@ -141,11 +141,7 @@ Follow the steps to setup the standard unix password manager to be used by docke
     		"[your.private.registry.com]": {}
     	},
     	"credsStore": "pass"
-    }
-    # Use pass git to update your password-store
-    $ pass git add . && pass git commit -m "a meaningful comment about your password"
-    # Only push to remote password-store but not on local client
-    $ 
+    } 
     ```
     
     ***Thats it, now you can freely use your credential store with docker and for other resources***
