@@ -16,7 +16,7 @@ Follow the steps to setup the standard unix password manager to be used by docke
     $ sudo chmod 550 ~/.local/bin/docker-credential-pass
     ```
 
-    Run `docker-credential-pass (store|get|erase|list|version)` to verify the binary is working correctly.  you should see:
+3. Run `docker-credential-pass (store|get|erase|list|version)` to verify the binary is working correctly.  you should see:
 <br/>
 
     ```bash
@@ -26,7 +26,7 @@ Follow the steps to setup the standard unix password manager to be used by docke
 
 4. Install `gpg` and `pass`:
 
-     *`Pass` isn’t in the default CentOS repositories, but it is in EPEL, which you can add with the following command on CentOS 7.*
+    *`Pass` isn’t in the default CentOS repositories, but it is in EPEL, which you can add with the following command on CentOS 7.*
 <br/>
 
     ```bash
@@ -121,7 +121,7 @@ Follow the steps to setup the standard unix password manager to be used by docke
 
     ```bash
     {
-        "auths": {}
+        "auths": {},
         "credsStore": "pass"
     }
 
