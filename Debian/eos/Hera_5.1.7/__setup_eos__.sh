@@ -550,9 +550,12 @@ if [[ $(command -v "docker-credential-pass" | grep -ic "docker-credential-pass")
 
     curl -fsSL https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz -o docker-credential-pass-v0.6.3-amd64.tar.gz
     mkdir -p ~/.local/bin
+cat >>~/.bashrc<<EOF
     if [[ $(printenv | grep -ic ~/.local/bin) -eq 0 ]]; then
         export PATH=${PATH}:~/.local/bin
     fi
+EOF
+source ~/.bashrc
     tar -xf docker-credential-pass-v0.6.3-amd64.tar.gz -C ~/.local/bin
     chown $USER:$USER -R ~/.local/bin
     chmod 550 ~/.local/bin/docker-credential-pass
