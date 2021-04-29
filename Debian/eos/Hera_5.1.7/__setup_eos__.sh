@@ -320,7 +320,6 @@ if [[ ! -d "/usr/local/etc/android-tools/android-sdk-linux/cmdline-tools" ]]; th
     else
         printf "\n\nChecksum verification failed......\n\n"
     fi
-    chown $USER:$USER -R ~/android-tools
     apt-get update -y && \
     apt-get upgrade -y
     wait $!
@@ -532,8 +531,8 @@ EOF
 fi
 ##########################################################################
 # download the current stable release of Docker Compose:
-if [[ $($ dpkg -l | grep -i docker-compose) -eq 0 ]]; then
-    curl -L "https://github.com/docker/compose/releases/download/1.28.6/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+if [[ $(dpkg -l | grep -i docker-compose) -eq 0 ]]; then
+    curl -fsSL "https://github.com/docker/compose/releases/download/1.28.6/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     # Apply executable permissions to the binary:
     chmod +x /usr/local/bin/docker-compose
     # Note: If the command docker-compose fails after installation, 
@@ -551,6 +550,9 @@ if [[ $(command -v "docker-credential-pass" | grep -ic "docker-credential-pass")
 
     curl -fsSL https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz -o docker-credential-pass-v0.6.3-amd64.tar.gz
     mkdir -p ~/.local/bin
+    if [[ $(printenv | grep -ic ~/.local/bin) -eq 0 ]]; then
+        export PATH=${PATH}:~/.local/bin
+    fi
     tar -xf docker-credential-pass-v0.6.3-amd64.tar.gz -C ~/.local/bin
     chown $USER:$USER -R ~/.local/bin
     chmod 550 ~/.local/bin/docker-credential-pass
@@ -558,6 +560,11 @@ if [[ $(command -v "docker-credential-pass" | grep -ic "docker-credential-pass")
     apt-get install -y gpg pass
     gpg2 --full-generate-key 
     mkdir -p ~/.docker
+    cat >~/.docker/config.json<<EOF
+{
+    "credsStore": "pass"
+}
+EOF
     printf "\n${RED}You will need this key to setup docker-credential-store. So copy the key on the line marked: \n\tgpg: key <copy this key> marked as ultimately trusted${NC}\n"
 fi
 ##########################################################################
