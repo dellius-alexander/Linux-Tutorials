@@ -590,4 +590,4 @@ apt -y autoclean
 apt -y clean
 
 # Restart the system
-shutdown -r now
+#shutdown -r now
