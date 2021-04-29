@@ -585,9 +585,9 @@ mv /etc/xdg/autostart/at-spi-dbus-bus.desktop /etc/xdg/autostart/at-spi-dbus-bus
 chmod 744 /usr/lib/gvfs/gvfsd-smb-browse
 ##########################################################################
 # Clean
-apt autoremove
-apt -y autoclean
-apt -y clean
+apt-get autoremove
+apt-get -y autoclean
+apt-get -y clean
 
 # Restart the system
 #shutdown -r now
