@@ -538,7 +538,7 @@ if [[ $(dpkg -l | grep -i docker-compose) -eq 0 ]]; then
     # Note: If the command docker-compose fails after installation, 
     #   check your path. You can also create a symbolic link to 
     #   /usr/bin or any other directory in your path.
-    ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+    ln -s -f /usr/local/bin/docker-compose /usr/bin/docker-compose
     # Install bash_completion for docker-compose
     curl \
         -L https://raw.githubusercontent.com/docker/compose/1.28.6/contrib/completion/bash/docker-compose \
