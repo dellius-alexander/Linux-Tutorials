@@ -206,7 +206,7 @@ if [[ $(dpkg -l | grep -wc 'ii  code') -eq 0 ]]; then
     apt-get update  &&
     apt-get install -y code
     wait $! 
-    [$? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
+    [ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 #================================== Manual Install VSCode ==================
     # # Download vscode packagecod
     # curl -fsSL 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' \
