@@ -187,7 +187,7 @@ fi
 if [[ $(dpkg -l | grep -ic 'sublime-text') -eq 0 ]]; then    
     wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | apt-key add - && \
     apt-get install apt-transport-https && \
-    echo "deb https://download.sublimetext.com/ apt/stable/" | tee /etc/apt/sources.list.d/sublime-text.list && \
+    echo "deb https://download.sublimetext.com/apt/stable/" | tee /etc/apt/sources.list.d/sublime-text.list && \
     apt-get update && \
     apt-get install -y sublime-text
     wait $!
@@ -272,7 +272,7 @@ fi
 # see: https://github.com/nodesource/distributions/blob/master/README.md
 # Using Ubuntu
 if [[ $(dpkg -l | grep -wc 'nodejs') -eq 0 ]]; then
-    curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash - && \
+    curl -fsSL https://deb.nodesource.com/setup_15.x | bash - && \
     apt-get install -y nodejs 
     [ $? -ne 0 ] && printf "\n${RED}Something went wrong...\n\n${?}${NC}\n"
 fi
@@ -575,6 +575,15 @@ EOF
 }
 EOF
     printf "\n${RED}You will need this key to setup docker-credential-store. So copy the key on the line marked: \n\tgpg: key <copy this key> marked as ultimately trusted${NC}\n"
+fi
+
+##########################################################################
+# Install Microsoft Teams
+if [[ $(dpkg -l | grep -iwc 'teams') -eq 0 ]]; then
+    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/ms-teams stable main" > /etc/apt/sources.list.d/teams.list
+    apt-get update
+    apt-get install -y teams
 fi
 ##########################################################################
 # Setup/update drivers automatically
