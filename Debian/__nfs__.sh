@@ -14,7 +14,7 @@ _ipv4_pattern="(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]
 _doman_pattern="[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"
 _url_pattern="($_ipv4_pattern|$_doman_pattern)"
 _file_pattern="([\/\sa-zA-Z0-9_\.\-\(\):]*){2}"
-msgg="<Ip address> <remote source directory> <host destination directory>"
+msgg="<Ip address|domain name> <remote source directory> <host destination directory>"
 ##########################################################################
 #
 if [[ $UID != 0 ]]; then
