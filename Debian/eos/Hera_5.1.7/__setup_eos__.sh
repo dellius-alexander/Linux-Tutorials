@@ -549,19 +549,25 @@ fi
 if [[ $(command -v "docker-credential-pass" | grep -ic "docker-credential-pass") -eq o ]]; then
 
     curl -fsSL https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz -o docker-credential-pass-v0.6.3-amd64.tar.gz
-    mkdir -p ~/.local/bin
-cat >>~/.bashrc<<EOF
-    if [[ $(printenv | grep -ic ~/.local/bin) -eq 0 ]]; then
-        export PATH=${PATH}:~/.local/bin
-    fi
-EOF
-source ~/.bashrc
-    tar -xf docker-credential-pass-v0.6.3-amd64.tar.gz -C ~/.local/bin
-    chown $USER:$USER -R ~/.local/bin
-    chmod 550 ~/.local/bin/docker-credential-pass
+    tar -xf docker-credential-pass-v0.6.3-amd64.tar.gz -C /usr/local/bin/
+    chmod 550 /usr/local/bin/docker-credential-pass
     docker-credential-pass list
     apt-get install -y gpg pass
-    gpg2 --full-generate-key 
+    echo "Enter your Real-Name for gpg key generation: "
+    read real_name
+    echo "Enter your EMAIL for gpg authentication: "
+    read EMAIL
+    gpg --batch --full--gen-key <<EOF | tee ~/generated_keys_file.conf
+Key-Type: 1
+Key-Length: 2048
+Subkey-Type: 1
+Subkey-Length: 2048
+Name-Real: ${real_name}
+Name-Email: ${EMAIL}
+Expire-Date: 0
+EOF
+    printf "\n${RED}Your keys are located in the \"generated_keys_file.conf\" file${NC}\n"
+    cat ~/generated_keys_file.conf 
     mkdir -p ~/.docker
     cat >~/.docker/config.json<<EOF
 {
