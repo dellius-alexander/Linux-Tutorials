@@ -1,6 +1,6 @@
 # Setup Grub On Hyper-V VM's Resolution
 
-The default file to edit is located at: `/etc/default/grub`
+The default file to edit screen resolution is located at: `/etc/default/grub`
 
 Edit the two lines below:
 
