@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 x11vnc -storepasswd 
-cat >>/etc/systemd/system/x11vnc.service <<EOF
+cat >/etc/systemd/system/x11vnc.service <<EOF
 [Unit]
 Description="x11vnc"
 Requires=display-manager.service
@@ -18,7 +18,7 @@ RestartSec=2
 WantedBy=multi-user.target
 EOF
 mkdir -p /opt/x11vnc/
-cat >>/opt/x11vnc/x11vnc_switch_user<<EOF
+cat >/opt/x11vnc/x11vnc_switch_user<<EOF
 #!/bin/bash
 
 #/usr/bin/x11vnc -loop -nopw -xkb -repeat -noxrecord -noxfixes -noxdamage -forever -rfbport 5900 -display :0 -auth guess -o /var/log/x11vnc.log
