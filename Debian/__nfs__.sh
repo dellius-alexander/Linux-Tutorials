@@ -50,7 +50,7 @@ cat >>/etc/fstab<<EOF
 ${_input[0]}:${_input[1]} ${_input[2]}  nfs4     _netdev,auto,nosuid,rw,sync,hard,intr    0   0
 EOF
 printf "\n$(cat /etc/fstab | grep -i 'nfs')\n\n"
-printf "\nMounted ${_input[1]} successfully to ${_input[3]} from host ${_input[0]}...\n\n\n"
+printf "\nMounted ${_input[1]} successfully to ${_input[2]} from host ${_input[0]}...\n\n\n"
 ls -lia ${_input[2]}
 printf "\n\n"
 fi
