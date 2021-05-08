@@ -82,11 +82,12 @@ apt-get install -y bind-utils && \
 #apt-get install -y sqlite3 && \
 apt-get install -y exfat-fuse exfat-utils net-tools && \
 apt-get install -y git gitk git-gui git-flow && \
+apt-get install -y imagemagick-6-doc && \
 # android CLI tools dependencies
 apt-get install -y autoconf build-essential curl \
 default-jdk gawk git gperf lib32stdc++6 lib32z1 lib32z1-dev \
 libcurl4-openssl-dev unzip zlib1g-dev &&
-[ $? -ne 0 ] && printf "\nLine: 87 :${RED}Something went wrong...\n\n${?}${NC}\n"
+[ $? -ne 0 ] && printf "\nLine: 90 :${RED}Something went wrong...\n\n${?}${NC}\n"
 ##########################################################################
 # Set python 3.6.x as default.
 update-alternatives --install /usr/bin/python python /usr/bin/python2.7 18
@@ -411,8 +412,22 @@ fi
 
 # To make this parameter persistent across reboots, append the following 
 # line to the /etc/sysctl.conf file: [ vm.swappiness=10 ]
+ #include <libxml/parser.h>
 
 ##################################################################################
+# Install PHP 
+__sha256="31a8a4a6e7d641f014749cef21421a6d1c9aaba6dce884e181a3370a8e69a04d"
+curl -fsSL https://www.php.net/distributions/php-7.4.18.tar.gz.asc \
+-o php-7.4.18.tar.gz.asc &&
+curl -fsSL https://www.php.net/distributions/php-7.4.18.tar.gz \
+-o php-7.4.18.tar.gz &&
+gpg --verify php-7.4.18.tar.gz.asc &&
+mkdir -p /opt/php/ &&
+tar -xvf php-7.4.18.tar.gz -C /opt/php/php-7.4.18
+# PHP manual
+# The PHP manual is hosted on Git. To checkout the latest English 
+#   version of the PHP manual:
+git clone https://github.com/php/doc-en.git ./phpdoc-en
 ##################################################################################
 
 # Install Cypress Locally
