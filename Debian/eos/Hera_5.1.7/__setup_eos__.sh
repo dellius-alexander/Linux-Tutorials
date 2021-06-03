@@ -593,6 +593,22 @@ EOF
 fi
 
 ##########################################################################
+# Teamviewer
+curl -fsSLo teamviewer_amd64.deb https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
+apt-get install -y libqt5webkit5 \
+qml-module-qtquick-controls \
+qml-module-qtquick-dialogs \
+qml-module-qtquick-privatewidgets \
+libqt5positioning5 \
+libqt5printsupport5 \
+libqt5sensors5 \
+libqt5webchannel5 \
+&& dpkg -i teamviewer_amd64.deb
+
+
+
+
+##########################################################################
 # Install Microsoft Teams
 # https://docs.microsoft.com/en-us/microsoftteams/get-clients
 if [[ $(dpkg -l | grep -iwc 'teams') -eq 0 ]]; then
