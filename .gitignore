@@ -4,3 +4,4 @@
 # Ignore Files
 .scratch
 .msi
+**/scp.bash
