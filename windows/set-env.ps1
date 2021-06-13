@@ -41,7 +41,7 @@ param (
     ParameterSetName="Objects",
     ValueFromPipeline=$true,
     ValueFromPipelineByPropertyName=$true,
-    HelpMessage="Dictionary")]
+    HelpMessage="System.Object[]")]
     [ValidateNotNullOrEmpty()]
     [System.Object[]]
     $objects)
