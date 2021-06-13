@@ -46,6 +46,7 @@ param (
 PROCESS {
     try {
         $userlogdir = (Write-Output $Env:USERPROFILE)+"\.logs\PS-Logs"
+        Write-Host "Logs for this install-msi can be found in $userlogdir"
         $path = (Resolve-Path $file).Path
         if (Test-Path $path) {
             $file_fullpath = (Resolve-Path $file).Path

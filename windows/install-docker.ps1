@@ -1,5 +1,4 @@
-#Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-#Set-ExecutionPolicy Bypass -Scope Process -Force;
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 # Install windows feature subsystem for linux
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 # Install windows feature virtual machine platform
@@ -9,3 +8,5 @@ iwr -Uri 'https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.m
 # Install wsl2 using 'function msi-install <file.msi>'
 .\install-msi.ps1 wsl_update_x64.msi
 wsl --set-default-version 2
+
+iwr -Uri 'https://desktop.docker.com/win/stable/amd64/Docker%20Desktop%20Installer.exe' -OutFile 'Docker_Desktop_Installer.exe'
