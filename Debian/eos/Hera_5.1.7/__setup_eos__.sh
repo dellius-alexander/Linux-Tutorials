@@ -55,16 +55,14 @@ while [ $(cat /etc/passwd | grep -c "${usr}") -eq 0 ]; do
 done
 printf "\n${usr}\n"
 USER=${usr}
-###############################################################################
+#######################################################################
 # Update the apt package index and install packages to allow apt to 
 # use a repository over HTTPS:
 #
 apt-get update -y && apt-get upgrade -y
 wait $!
-
 # #####################################################################
 # Installs Packages
-#
 apt-get install -y curl ubuntu-restricted-extras && \
 apt-get install -y software-properties-common --no-install-recommends && \
 apt-get install -y libavcodec-extra ffmpeg && \
@@ -83,10 +81,11 @@ apt-get install -y bind-utils && \
 apt-get install -y exfat-fuse exfat-utils net-tools && \
 apt-get install -y git gitk git-gui git-flow && \
 apt-get install -y imagemagick-6-doc && \
+apt-get install -y libcanberra-gtk-module && \
 # android CLI tools dependencies
 apt-get install -y autoconf build-essential curl \
 default-jdk gawk git gperf lib32stdc++6 lib32z1 lib32z1-dev \
-libcurl4-openssl-dev unzip zlib1g-dev &&
+libcurl4-openssl-dev unzip zlib1g-dev && \
 [ $? -ne 0 ] && printf "\nLine: 90 :${RED}Something went wrong...\n\n${?}${NC}\n"
 ##########################################################################
 # Set python 3.6.x as default.
@@ -601,6 +600,11 @@ if [[ $(dpkg -l | grep -iwc 'teams') -eq 0 ]]; then
     apt-get update
     apt-get install -y teams
 fi
+##########################################################################
+# Install Canon Print Driver
+
+
+
 ##########################################################################
 # Setup/update drivers automatically
 if [ $(ubuntu-drivers devices | grep -ic 'recommended') -gt 0 ]; then
