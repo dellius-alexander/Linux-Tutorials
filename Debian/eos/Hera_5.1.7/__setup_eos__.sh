@@ -620,6 +620,10 @@ fi
 # Install Canon Print Driver
 
 
+##########################################################################
+# Install Cisco WebEX
+curl -fsSL https://binaries.webex.com/WebexDesktop-Ubuntu-Official-Package/Webex.deb -o Webex.deb
+apt-get install ./Webex.deb
 
 ##########################################################################
 # Setup/update drivers automatically
