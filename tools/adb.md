@@ -131,14 +131,47 @@ adb shell permissions groups # (list permission groups definitions)
 adb shell list permissions -g -r # (list permissions details)
 ```
 
-## ADB Man
+## Pull APK from Device
+
+1.  Connect to your device and verify connection
+
+    ```bash
+    # Connect to device
+    # adb connect <device ip address>:<port>
+    $ adb connect 10.0.0.45:5555
+    connected to 10.0.0.45:5555
+
+    # Verify connection
+    $  adb devices 
+    List of devices attached
+    10.0.0.45:5555	device
+    ```
+
+2.  Find the APK and Download
+
+    ```bash
+    # List packages and grep the APK name
+    # adb shell pm list packages | grep -i '<you apk/app name'
+    $ adb shell pm list packages | grep -i 'abcnews'
+    com.abc.abcnews
+    # Find the path of the APK
+    # adb shell pm path <package name>
+    $ adb shell pm path com.abc.abcnews
+    package:/data/app/com.abc.abcnews/base.apk
+    # Download the APK
+    # adb pull /data/app/path to apk
+    $ adb pull /data/app/com.abc.abcnews/base.apk
+    /data/app/com.abc.abcnews/base.apk: 1 file pulled. 6.4 MB/s (75796367 bytes in 11.290s)
+    ```
+
+## ADB Manual
 
 ```bash
 # NAME
 #        adb - Android Debug Bridge
 
 # SYNOPSIS
-#        adb [-d|-e|-s serialNumber] command
+$        adb [-d|-e|-s serialNumber] command
 
 # DESCRIPTION
 
