@@ -1,15 +1,63 @@
 # GIT Command Reference
 
-## Fixing missing origin remote
+1. ### Fixing missing origin remote
 
-```bash
-$ git push -u origin main
-fatal: 'origin' does not appear to be a git repository
-fatal: The remote end hung up unexpectedly
-...
+    ```bash
+    $ git push -u origin main
+    fatal: 'origin' does not appear to be a git repository
+    fatal: The remote end hung up unexpectedly
+    ...
 
-# To fix thisverify current remotes
-git remote -v 
-# add reference to origin branch
-git remote add origin <url/to/repo>
-```
+    # To fix thisverify current remotes
+    git remote -v 
+    # add reference to origin branch
+    git remote add origin <url/to/repo>
+    ```
+
+2. ### Configure Git to use the exclude file ~/.gitignore_global for all or ~/.gitignore_local for local Git repositories.
+
+    - You can also create a global .gitignore file to define a list of rules for ignoring files in every Git repository on your computer. For example, you might create the file at ~/.gitignore_global and add some rules to it.
+
+    ```bash
+    #create a global .gitignore file to define a list of rules for ignoring files in every Git repository on your computer
+    $ git config --global core.excludesfile ~/.gitignore_global
+    ```
+
+    - You can also create a local .gitignore file to define a list of rules for ignoring files in local Git repository on your computer. For example, you might create the file at ~/.gitignore_local and add some rules to it.
+
+    ```bash
+    # create a local .gitignore file to define a list of rules for ignoring files in local Git repository
+    $ git config --local core.excludesfile ~/.gitignore_local
+    ```
+
+3. ### Create a new repository or push an existing repository from the command line
+
+    Get started by creating a new file or uploading an existing file. We recommend every repository include a README, LICENSE, and .gitignore.
+
+    - #### create a new repository on the command line
+
+    ```bash
+    echo "# <repo name/title>" >> README.md
+    git init && \
+    git add README.md && \
+    git commit -m "first commit" && \
+    git branch -M main && \
+    git remote add origin https://github.com/<account username>/<repo name>.git && \
+    git push -u origin main
+    ```
+
+
+    <!--   
+    git branch -M main && \
+    git remote add origin https://github.com/dellius-alexander/Alpha2Omega.git && \
+    git push -u origin main    
+    -->
+
+
+    - #### push an existing repository from the command line
+
+    ```bash
+    git remote add origin https://github.com/<account username>/<repo name>.git
+    git branch -M main
+    git push -u origin main
+    ```

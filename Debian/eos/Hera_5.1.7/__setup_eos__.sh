@@ -621,6 +621,12 @@ fi
 
 
 ##########################################################################
+# Install Zoom Conferencing
+curl -fsSL https://zoom.us/client/latest/zoom_amd64.deb -o zoom_amd64.deb && \
+curl -fsSL https://zoom.us/linux/download/pubkey -o package-signing-key.pub && \
+apt-get install -y libxcb-xtest0 && \
+dpkg -i zoom_amd64.deb
+##########################################################################
 # Install Cisco WebEX
 curl -fsSL https://binaries.webex.com/WebexDesktop-Ubuntu-Official-Package/Webex.deb -o Webex.deb
 apt-get install ./Webex.deb
